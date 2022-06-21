@@ -5,4 +5,4 @@ from .models import BlogPost
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogPost
-        fields = ['author', 'title', 'content', 'date']
+        fields = ['id', 'author', 'title', 'content', 'date']
