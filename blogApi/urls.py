@@ -7,5 +7,5 @@ router = DefaultRouter()
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('article/', BlogView.as_view())
+    path('blogposts/', BlogView.as_view())
 ]

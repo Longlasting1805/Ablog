@@ -3,6 +3,7 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.core.paginator import Paginator
 
 from .models import BlogPost
 from .serializers import BlogSerializer
@@ -13,7 +14,6 @@ from .serializers import BlogSerializer
 class BlogView(APIView):
     def post(self, request):
         serializer = BlogSerializer(data=request.data)
-
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -21,7 +21,11 @@ class BlogView(APIView):
 
     def get(self, request):
         blog = BlogPost.objects.all()
-        serializer = BlogSerializer(blog, many=True)
+        page_number = self.request.query_params.get('page_number', 1)
+        page_size = self.request.query_params.get('page_size', 1)
+        paginator = Paginator(blog, page_size)
+        serializer = BlogSerializer(paginator.page(page_number), many=True, context={'request': request})
+
         return Response(serializer.data)
 
     def patch(self, request, id):
